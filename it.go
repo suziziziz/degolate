@@ -6,6 +6,7 @@ import (
 )
 
 // Use this to register a decorator.
+//
 // See `./examples/basic/main.go`
 func It[F any](function F, decorator any) F {
 	fn, dec := paramsValidate(function, decorator)

@@ -3,40 +3,38 @@ package main
 import (
 	"fmt"
 	"os/user"
-	"reflect"
-	"runtime"
 	"strings"
-	"time"
 
 	"github.com/suziziziz/degolate"
+	"github.com/suziziziz/degolate/examples/basic/decorators"
 )
+
+// You can use `degolate.Many` to apply many decorators at once.
+//
+// `degolate.Many` will return the original function, but decorated.
+var Greetings = degolate.Many(
+	// Decorators builder
+	func(fn interface{}) {
+		// See the description of `decorators.Logging` to understand how to
+		// implement a decorator with degolate.
+		decorators.Logging(fn)
+		decorators.HelloDegolate(fn)
+	},
+	// Function to be decorated
+	func(name string) (string, string) {
+		return "Hey %s! Do you want to degolate? 🫵", name
+	},
+)
+
+// Alternatively, you can apply these decorators directly without
+// `degolate.Many`, as you can see commented below.
+//
+// var _, Greetings = decorators.Logging(greetings),
+// 	decorators.HelloDegolate(greetings)
 
 func main() {
 	usr, _ := user.Current()
 
+	// To use a decorated function, just call it.
 	fmt.Printf(Greetings(strings.Split(usr.Name, " ")[0]))
-}
-
-var Greetings = degolate.Many(
-	func(fn interface{}) {
-		logging(fn)
-		helloDegolate(fn)
-	},
-	greetings,
-)
-
-func greetings(name string) (string, string) {
-	return "Hey %s! Do you want to degolate? 🫵", name
-}
-
-func helloDegolate[F any](fn F) F {
-	return degolate.It(fn, func() {
-		fmt.Println("LET'S DEGOLATE IT ALL! 🤘")
-	})
-}
-
-func logging[F any](fn F) F {
-	return degolate.It(fn, func() {
-		fmt.Printf("[%s]: %s %T\n", time.Now(), runtime.FuncForPC(reflect.ValueOf(fn).Pointer()).Name(), fn)
-	})
 }

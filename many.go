@@ -6,6 +6,7 @@ import (
 )
 
 // Just a simple way to apply many `decorators` to `function`
+//
 // See `./examples/basic/main.go`
 func Many[F any](decorators func(fn interface{}), function F) (fn F) {
 	decorators(function)
