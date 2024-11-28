@@ -6,8 +6,8 @@ import (
 	"github.com/suziziziz/degolate"
 )
 
-func HelloDegolate[F any](fn F) F {
-	return degolate.It(fn, func() {
-		fmt.Println("LET'S DEGOLATE IT ALL! 🤘")
+func HelloDegolate(emoji string) degolate.D {
+	return degolate.It(func() {
+		fmt.Printf("LET'S DEGOLATE IT ALL! %s\n", emoji)
 	})
 }

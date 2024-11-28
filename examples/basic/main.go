@@ -13,24 +13,26 @@ import (
 //
 // `degolate.Many` will return the original function, but decorated.
 var Greetings = degolate.Many(
-	// Decorators builder
-	func(fn interface{}) {
-		// See the description of `decorators.Logging` to understand how to
-		// implement a decorator with degolate.
-		decorators.Logging(fn)
-		decorators.HelloDegolate(fn)
-	},
-	// Function to be decorated
 	func(name string) (string, string) {
 		return "Hey %s! Do you want to degolate? 🫵", name
 	},
+	decorators.Logging(),
+	decorators.HelloDegolate("🤘"),
 )
 
-// Alternatively, you can apply these decorators directly without
-// `degolate.Many`, as you can see commented below.
+// Instead of `degolate.Many` you can call decorators directly, as you can see
+// below.
 //
-// var _, Greetings = decorators.Logging(greetings),
-// 	decorators.HelloDegolate(greetings)
+// var Greetings = decorators.Logging()(
+// 	decorators.HelloDegolate("🤘")(
+// 		func(name string) (string, string) {
+// 			return "Hey %s! Do you want to degolate? 🫵", name
+// 		},
+// 	),
+// ).(func(name string) (string, string))
+//
+// NOTE: Applying too many decorators this way won't be efficient and is not
+// recommended.
 
 func main() {
 	usr, _ := user.Current()
